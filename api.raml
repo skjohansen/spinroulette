@@ -1,0 +1,113 @@
+#%RAML 0.8
+baseUri: http://mocksvc.mulesoft.com/mocks/b9f57ff6-bff5-4556-be82-02fcda54c843
+title: SpinRoulette
+version: v1
+/games:
+  description: List and create a game
+  get:
+    description: List all on-going games
+    responses:
+      200:
+        description: List of games, not paged
+        body:
+          application/json: 
+            example: |
+              {
+                "games": [
+                   {
+                     "gameId":"1",
+                     "numberOfTiggerPulls":3,
+                     "cylinderSize": 6
+                   },
+                   {
+                     "gameId":"3",
+                     "numberOfTiggerPulls":1,
+                     "cylinderSize": 4
+                   }
+                ]
+              }
+      404:
+        description: No active games
+        body:
+          application/json: 
+            example: |
+              {
+                "message": "No active games"
+              }
+  post:
+    description: Create a new game, returs an url to the game endpoint
+    responses:
+      200:
+        description: Game created
+        body:
+          application/json: 
+            example: |
+              {
+                "gameId":"3",
+                "numberOfTiggerPulls":1,
+                "cylinderSize": 4
+              }
+      400:
+        description: Bad request, you might be missing data
+        body:
+          application/json: 
+            example: |
+              {
+                "message": "You might be missing data"
+              }
+  /{gamesId}:
+    description: Interact with a given game
+    get:
+      description: Shows the status of the game
+      responses:
+        200:
+          description: How many clicks have been made so far
+          body:
+            application/json: 
+              example: |
+                {
+                  "gameId":"3",
+                  "numberOfTiggerPulls":2,
+                  "cylinderSize": 4
+                }
+        404:
+          description: Game not found, maybe it's already over
+          body:
+            application/json: 
+              example: |
+                {
+                  "message": "Game not found, maybe it's already over"
+                }
+    post:
+      description: Pull the trigger
+      responses:
+        204:
+          description: You are still alive
+          body:
+            application/json: 
+              example: |
+                {
+                  "numberOfTiggerPulls":2,
+                  "cylinderSize": 4
+                }
+        410:
+          description: Bang
+          body:
+            application/json: 
+              example: |
+                {
+                  "message": "Bang"
+                }
+    patch:
+      description: Reload the revolver (restart)
+      responses:
+        200:
+          description: Game status, number of clicks so far
+          body:
+            application/json: 
+              example: |
+                {
+                  "gameId":"3",
+                  "numberOfTiggerPulls":1,
+                  "cylinderSize": 4
+                }
