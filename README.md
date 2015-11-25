@@ -3,4 +3,4 @@ SpinRoulette is a small webbased "russian" roulette, it consist of a webbackend 
 
 ## Thoughts
 The game is developed with an API first approch. The first step have been to document the API using RAML.
-Second step have been to build the backend, and third step to build a simple frontend.
+Second step have been to build the backend (ASP.NET 5, on .NET core), and third step to build a simple frontend.
