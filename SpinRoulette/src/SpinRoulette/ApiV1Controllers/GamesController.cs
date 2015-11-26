@@ -12,10 +12,11 @@ namespace SpinRoulette.ApiV1.Controllers
     public class GamesController : Controller
     {
         private IRoulette _rouletteGame;
-        public GamesController() {
-            _rouletteGame = new Roulette();
-        }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="roulette">Set by mocking tool</param>
         public GamesController(IRoulette roulette)
         {
             _rouletteGame = roulette;
@@ -53,11 +54,9 @@ namespace SpinRoulette.ApiV1.Controllers
         [HttpPost]
         public IActionResult PostGames([FromBody]Game inputGame)
         {
-            IRoulette rouletteGame = new Roulette();
-
             Game outputGame  = null;
             try {
-                var createdGame = rouletteGame.CreateGame(new SpinLogic.Model.Game() { CylinderSize = inputGame.CylinderSize });
+                var createdGame = _rouletteGame.CreateGame(new SpinLogic.Model.Game() { CylinderSize = inputGame.CylinderSize });
                 outputGame = new Game() { CylinderSize = createdGame.CylinderSize, GameId = createdGame.GameId, NumberOfTiggerPulls = createdGame.NumberOfTiggerPulls };
             }
             catch {
@@ -82,12 +81,10 @@ namespace SpinRoulette.ApiV1.Controllers
         [HttpGet("{id}")]
         public IActionResult GetGame(string id)
         {
-            IRoulette rouletteGame = new Roulette();
-
             Game outputGame = null;
             try
             {
-                var loadedGame = rouletteGame.GetGame(id);
+                var loadedGame = _rouletteGame.GetGame(id);
                 outputGame = new Game() { CylinderSize = loadedGame.CylinderSize, GameId = loadedGame.GameId, NumberOfTiggerPulls = loadedGame.NumberOfTiggerPulls };
             }
             catch
@@ -113,10 +110,9 @@ namespace SpinRoulette.ApiV1.Controllers
         [HttpPatch("{id}")]
         public IActionResult PatchGame(string id)
         {
-            IRoulette rouletteGame = new Roulette();
             try
             {
-                rouletteGame.RestartGame(id);
+                _rouletteGame.RestartGame(id);
             }
             catch
             {
@@ -126,7 +122,7 @@ namespace SpinRoulette.ApiV1.Controllers
             Game outputGame = null;
             try
             {
-                var loadedGame = rouletteGame.GetGame(id);
+                var loadedGame = _rouletteGame.GetGame(id);
                 outputGame = new Game() { CylinderSize = loadedGame.CylinderSize, GameId = loadedGame.GameId, NumberOfTiggerPulls = loadedGame.NumberOfTiggerPulls };
             }
             catch
@@ -151,12 +147,10 @@ namespace SpinRoulette.ApiV1.Controllers
         [HttpPost("{id}")]
         public IActionResult PostGame(string id)
         {
-            IRoulette rouletteGame = new Roulette();
-
             Game outputGame = null;
             try
             {
-                var triggerResult = rouletteGame.PullTrigger(id);
+                var triggerResult = _rouletteGame.PullTrigger(id);
 
 
                 if (triggerResult == TriggerResult.Bang) {
@@ -164,7 +158,7 @@ namespace SpinRoulette.ApiV1.Controllers
                 }
 
 
-                var loadedGame = rouletteGame.GetGame(id);
+                var loadedGame = _rouletteGame.GetGame(id);
                 outputGame = new Game() { CylinderSize = loadedGame.CylinderSize, GameId = loadedGame.GameId, NumberOfTiggerPulls = loadedGame.NumberOfTiggerPulls };
             }
             catch

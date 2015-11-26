@@ -12,20 +12,40 @@ namespace SpinRoulette.Test.ApiV1Controllers
     public class GameController
     {
         [Fact]
-        public void GetGames_TwoGames_Success()
+        public void GetGames_TwoGames_Ok200()
         {
-            IRoulette rouletteMock = new RouletteMock() {
+            // Arrange
+            IRoulette rouletteMock = new RouletteMock()
+            {
                 AllGames = new List<SpinLogic.Model.Game>() {
                     new SpinLogic.Model.Game() { CylinderSize = 5, GameId = "2ed", NumberOfTiggerPulls = 2 },
                     new SpinLogic.Model.Game() {CylinderSize=4, GameId="eu2", NumberOfTiggerPulls=0 }
                 }
             };
 
-            SpinRoulette.ApiV1.Controllers.GamesController gc = new ApiV1.Controllers.GamesController(rouletteMock);
-            var games = (ObjectResult)gc.GetGames();
-            
+            // Act
+            SpinRoulette.ApiV1.Controllers.GamesController sut = new ApiV1.Controllers.GamesController(rouletteMock);
+            var games = (ObjectResult)sut.GetGames();
 
+
+            // Assert
+            Assert.Equal(200, games.StatusCode.Value);
             Assert.Equal(2, ((List<Game>)games.Value).Count);
+        }
+
+        [Fact]
+        public void GetGames_NoGames_NotFound404()
+        {
+            // Arrange
+            IRoulette rouletteMock = new RouletteMock();
+
+            // Act
+            SpinRoulette.ApiV1.Controllers.GamesController sut = new ApiV1.Controllers.GamesController(rouletteMock);
+            var games = (ObjectResult)sut.GetGames();
+
+
+            // Assert
+            Assert.Equal(404, games.StatusCode.Value);
         }
     }
 }

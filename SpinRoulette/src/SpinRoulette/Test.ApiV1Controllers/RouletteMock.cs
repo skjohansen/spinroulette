@@ -9,6 +9,11 @@ namespace SpinRoulette.Test.ApiV1Controllers
 {
     public class RouletteMock : IRoulette
     {
+        public RouletteMock()
+        {
+            AllGames = new List<Game>();
+        }
+
         public List<Game> AllGames { get; set; }
 
         public Game CreateGame(Game game)
