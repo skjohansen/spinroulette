@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SpinRoulette.ApiResources
+namespace SpinLogic
 {
-    public class Status
+    public enum TriggerResult
     {
-        public string Message { get; set; }
+        Click,
+        Bang
     }
 }

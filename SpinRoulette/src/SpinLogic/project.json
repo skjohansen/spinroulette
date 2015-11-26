@@ -1,20 +1,22 @@
-﻿{
-  "version": "1.0.0-*",
-  "description": "SpinLogic Class Library",
-  "authors": [ "Stephan" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+{
+    "version": "1.0.0-*",
+    "description": "SpinLogic Class Library",
+    "authors": [ "Stephan" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
 
-  "dependencies": {
-    "System.Collections": "4.0.10-beta-23019",
-    "System.Linq": "4.0.0-beta-23019",
-    "System.Threading": "4.0.10-beta-23019",
-    "System.Runtime": "4.0.10-beta-23019",
-    "Microsoft.CSharp": "4.0.0-beta-23019"
-  },
+    "dependencies": {
+        "System.Collections": "4.0.10-beta-23019",
+        "System.Linq": "4.0.0-beta-23019",
+        "System.Threading": "4.0.10-beta-23019",
+        "System.Runtime": "4.0.10-beta-23019",
+        "Microsoft.CSharp": "4.0.0-beta-23019",
+        "Microsoft.AspNet.WebApi.Core": "5.2.3",
+        "Newtonsoft.Json": "7.0.1"
+    },
 
-  "frameworks": {
-    "dotnet": { }
-  }
+    "frameworks": {
+        "dotnet": { }
+    }
 }

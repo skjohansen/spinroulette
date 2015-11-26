@@ -1,38 +1,40 @@
 {
-    "webroot": "wwwroot",
-    "version": "1.0.0-*",
+  "webroot": "wwwroot",
+  "version": "1.0.0-*",
 
-    "dependencies": {
-        "Microsoft.AspNet.Mvc": "6.0.0-beta5",
-        "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
-        "Microsoft.AspNet.StaticFiles": "1.0.0-beta5",
-        "Newtonsoft.Json": "6.0.4",
-        "Microsoft.Net.Http": "2.2.29",
-        "Microsoft.AspNet.WebApi.Core": "5.2.0",
-        "RAML.Api.Core": "0.9.6",
-        "SpinLogic": "1.0.0-*"
-    },
+  "dependencies": {
+    "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
+    "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
+    "Microsoft.AspNet.StaticFiles": "1.0.0-beta5",
+    "Newtonsoft.Json": "7.0.1",
+    "Microsoft.Net.Http": "2.2.29",
+    "Microsoft.AspNet.WebApi.Core": "5.2.0",
+    "RAML.Api.Core": "0.9.6",
+    "SpinLogic": "1.0.0-*",
+    "xunit": "2.1.0",
+    "xunit.runner.dnx": "2.1.0-rc1-build204",
+    "Microsoft.AspNet.Mvc": "6.0.0-rc1-final"
+  },
+  "commands": {
+    "test": "xunit.runner.dnx",
+    "web": "Microsoft.AspNet.Hosting --config hosting.ini"
+  },
 
-    "commands": {
-        "web": "Microsoft.AspNet.Hosting --config hosting.ini",
-    },
+  "frameworks": {
+    "dnx451": { },
+    "dnxcore50": { }
+  },
 
-    "frameworks": {
-        "dnx451": { },
-        "dnxcore50": { }
-    },
-
-    "exclude": [
-        "wwwroot",
-        "node_modules",
-        "bower_components"
-    ],
-    "publishExclude": [
-        "node_modules",
-        "bower_components",
-        "**.xproj",
-        "**.user",
-        "**.vspscc"
-    ]
+  "exclude": [
+    "wwwroot",
+    "node_modules",
+    "bower_components"
+  ],
+  "publishExclude": [
+    "node_modules",
+    "bower_components",
+    "**.xproj",
+    "**.user",
+    "**.vspscc"
+  ]
 }
