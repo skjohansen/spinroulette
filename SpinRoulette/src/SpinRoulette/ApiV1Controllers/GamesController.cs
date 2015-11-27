@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Http;
 using SpinRoulette.ApiResources;
-using Microsoft.AspNet.Http.Internal;
 using SpinLogic;
 
 namespace SpinRoulette.ApiV1.Controllers
@@ -56,7 +53,7 @@ namespace SpinRoulette.ApiV1.Controllers
         {
             Game outputGame  = null;
             try {
-                var createdGame = _rouletteGame.CreateGame(new SpinLogic.Model.Game() { CylinderSize = inputGame.CylinderSize });
+                var createdGame = _rouletteGame.CreateGame(inputGame.CylinderSize);
                 outputGame = new Game() { CylinderSize = createdGame.CylinderSize, GameId = createdGame.GameId, NumberOfTiggerPulls = createdGame.NumberOfTiggerPulls };
             }
             catch {
@@ -87,7 +84,7 @@ namespace SpinRoulette.ApiV1.Controllers
                 var loadedGame = _rouletteGame.GetGame(id);
                 outputGame = new Game() { CylinderSize = loadedGame.CylinderSize, GameId = loadedGame.GameId, NumberOfTiggerPulls = loadedGame.NumberOfTiggerPulls };
             }
-            catch
+            catch(KeyNotFoundException)
             {
                 return new ObjectResult(new Status() { Message = "No game found" }) { StatusCode = 404 };
             }
@@ -114,7 +111,7 @@ namespace SpinRoulette.ApiV1.Controllers
             {
                 _rouletteGame.RestartGame(id);
             }
-            catch
+            catch(KeyNotFoundException)
             {
                 return new ObjectResult(new Status() { Message = "No game found" }) { StatusCode = 404 };
             }
@@ -161,7 +158,7 @@ namespace SpinRoulette.ApiV1.Controllers
                 var loadedGame = _rouletteGame.GetGame(id);
                 outputGame = new Game() { CylinderSize = loadedGame.CylinderSize, GameId = loadedGame.GameId, NumberOfTiggerPulls = loadedGame.NumberOfTiggerPulls };
             }
-            catch
+            catch(KeyNotFoundException)
             {
                 return new ObjectResult(new Status() { Message = "No game found" }) { StatusCode = 404 };
             }

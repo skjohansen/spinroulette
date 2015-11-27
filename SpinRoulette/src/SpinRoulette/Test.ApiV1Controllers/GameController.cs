@@ -18,8 +18,8 @@ namespace SpinRoulette.Test.ApiV1Controllers
             IRoulette rouletteMock = new RouletteMock()
             {
                 AllGames = new List<SpinLogic.Model.Game>() {
-                    new SpinLogic.Model.Game() { CylinderSize = 5, GameId = "2ed", NumberOfTiggerPulls = 2 },
-                    new SpinLogic.Model.Game() {CylinderSize=4, GameId="eu2", NumberOfTiggerPulls=0 }
+                    new SpinLogic.Model.Game("2ed",5,2),
+                    new SpinLogic.Model.Game("eu2",4,0)
                 }
             };
 

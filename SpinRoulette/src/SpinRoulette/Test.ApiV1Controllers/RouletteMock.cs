@@ -16,7 +16,7 @@ namespace SpinRoulette.Test.ApiV1Controllers
 
         public List<Game> AllGames { get; set; }
 
-        public Game CreateGame(Game game)
+        public Game CreateGame(uint cylinderSize)
         {
             throw new NotImplementedException();
         }

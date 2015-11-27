@@ -12,7 +12,7 @@ namespace SpinLogic
     {
         Game GetGame(string gameId);
         TriggerResult PullTrigger(string gameId);
-        Game CreateGame(Game game);
+        Game CreateGame(uint cylinderSize);
         void RestartGame(string gameId);
         List<Game> GetAllGames();
     }
