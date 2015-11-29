@@ -15,6 +15,7 @@ namespace SpinRoulette
         // Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddTransient<IRoulette, Roulette>();
             services.AddTransient<IRandomGenerator, RandomGenerator>();
             services.AddMvc();
@@ -26,6 +27,7 @@ namespace SpinRoulette
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors(cors => cors.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             // Configure the HTTP request pipeline.
             app.UseStaticFiles();
             // Add MVC to the request pipeline.

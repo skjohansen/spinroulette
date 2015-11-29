@@ -12,7 +12,7 @@ The game is developed using Visual Studio 2015, but it should be possible to als
 
 The solution consists of two projects SpinLogic and SpinRoulette. SpinRoulette is the web project which implements the API structure and basic API behaviour. SpinLogic is the gamelogic, this is consumed by SpinRoulette and have no depencies to the API.
 
-Testability have during development been a important focus. And currently a few unittest of the API controller are implemented using the xUnit-framework, mainly for prove of concept.
+Testability have during development been a important focus. And currently a few unittest of the API controller are implemented using the xUnit-framework, mainly for proof of concept.
 
 ## Frontend
 
