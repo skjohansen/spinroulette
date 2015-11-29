@@ -4,121 +4,72 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Spin Roulette</title>
+	<style type="text/css">
+		#content {
+		  width: 700px ;
+		  margin-left: auto ;
+		  margin-right: auto ;
+		}
+		
+		#loading{
+			text-align:center;
+		}
+	</style>
 </head>
 
 <body>
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>
-
-	
-Play roulette
-<div id="Welcome">
-<button id="showNewGame">Create new game</button>
-
-Pick a game to join (list games)
-<table id="gamelist" style="display:none;">
-    <tr>
-        <th>Game Id</th>
-        <th>Cylinder Size</th>
-		<th>Trigger pulls</th>
-    </tr>
-	<tr><td><a href="">GAMEID</a></td><td>Cyl Size</td><td>Shooots</td></tr>
-</table>
+<div id="content">	
+	<h1>Play roulette</h1>
+	<div id="welcome" style="display:none;">
+		<button id="showNewGame">Create new game</button>
+		<div id="gamelist" style="display:none;">
+			<h2>Pick a game to join:</h2>
+			<table id="gametable">
+				<tr>
+					<th>Game Id</th>
+					<th>Cylinder Size</th>
+					<th>Trigger pulls</th>
+				</tr>
+				<tr><td><a href="">GAMEID</a></td><td>Cyl Size</td><td>Shooots</td></tr>
+			</table>
+		</div>
+	</div>
+	<div id="game"  style="display:none;">
+		<button onclick="pullTriggerAjax()">Pull the trigger</button>
+		<button onclick="reloadGunAjax()">Reload gun</button>
+	</div>
+	<div id="newGamePopup" style="display:none;">
+		Size of cylinder
+		<input type="number" id="cylinderSize" size="4">
+		<button id="createNewGame">Create</button>
+	</div>
+	<div id="loading" style="display:none;">
+			<img src="http://jimpunk.net/Loading/wp-content/uploads/loading1.gif" />
+	</div>
 </div>
-<div id="Game"  style="display:none;">
-<button onclick="pullTrigger()">Pull the trigger</button>
-<button onclick="reloadGun()">Reload gun</button>
-</div>
-<div id="newGamePopup" style="display:none;">
-Size of cylinder
-<input type="number" id="cylinderSize" size="4">
-<button id="createNewGame">Create</button>
-</div>
-
 <script>
 var currentGameId = '';
+var rouletteApiUrl = 'http://localhost:50712/v1/';
 $(function() {
-	showGames();
-	populateGameList();
+	populateGameListAjax();
 });
 
-function pullTrigger(){
-  $.ajax({
-	type: "POST",
-    url: "http://localhost:50712/v1/games/"+currentGameId,
-	crossDomain: true,
-    contentType: "application/json; charset=utf-8",
-    dataType: "json",
-	statusCode: {
-		410: function(data) {
-			showGames();
-			populateGameList();
-			
-			
-		}
-	},
-    success: function(data)
-	{
-		showGames();
-		populateGameList();
-	},
-    failure: function(errMsg) {
-        alert(errMsg);
-    }
-  });
-}
 
-function reloadGun(){
-  $.ajax({
-	type: "PATCH",
-    url: "http://localhost:50712/v1/games/"+currentGameId,
-	crossDomain: true,
-    contentType: "application/json; charset=utf-8",
-    dataType: "json",
-    success: function(data)
-	{
-		showGames();
-		populateGameList();
-	},
-    failure: function(errMsg) {
-        alert(errMsg);
-    }
-  });
-}
 
 function showGames(){
 	currentGameId = "";
-		$('#Welcome').show();
-	$('#Game').hide();
+	$('#welcome').show();
+	$('#game').hide();
 }
 
 function showGame(gameId){
 	currentGameId = gameId;
-	$('#Welcome').hide();
-	$('#Game').show();
+	$('#welcome').hide();
+	$('#game').show();
 }
 
-function populateGameList(){
-	$('#gamelist tr').not(':first').remove();
-	$('#gamelist').hide();
-$.ajax({
-  url: "http://localhost:50712/v1/games",
-  context: document.body
-}).done(function(gamesData) {
-	var html = '';
-	for(var i = 0; i < gamesData.length; i++){
-				html += '<tr><td><a href="#" onclick="showGame(\''+gamesData[i].GameId +'\')">' + gamesData[i].GameId + 
-						'</a></td><td>' + gamesData[i].NumberOfTiggerPulls +
-						'</td><td>' + gamesData[i].CylinderSize + '</td></tr>';
-						}
-						
-	$('#gamelist tr').first().after(html);
-	$('#gamelist').show();
-	
-}).fail(function() {
-	$('#newGamePopup').show();
-	$('#gamelist').hide();
-  });
-}
+
 
 
 $( "#createNewGame" ).click(function() {
@@ -130,23 +81,113 @@ $( "#createNewGame" ).click(function() {
   
   $.ajax({
 	type: "POST",
-    url: "http://localhost:50712/v1/games",
+    url: rouletteApiUrl+"games",
 	crossDomain: true,
     data: JSON.stringify(inputData),
     contentType: "application/json; charset=utf-8",
     dataType: "json",
-	statusCode: {
-		400: function(errMsg) {
+	timeout: 3000
+	}).done(function() {
+		$('#newGamePopup').hide();
+		populateGameListAjax();
+	}).fail(function( jqXHR, textStatus, errorThrown ) {
+		if(textStatus === 'timeout'){     
+			alert('Failed from timeout'); 
+		}
+		if(jqXHR.status == '400'){
 			alert( errMsg.responseJSON.Message );
 			$('#newGamePopup').hide();
-			
+		}else{
+			alert('Unknown error: '+jqXHR.status); 
 		}
-	},
-    success: function(data){$('#newGamePopup').hide();populateGameList();},
-    failure: function() {   }
-  });
-  
+	});  
 });
+
+
+function pullTriggerAjax(){
+	$.ajax({
+		type: "POST",
+		url: rouletteApiUrl+"games/"+currentGameId,
+		crossDomain: true,
+		contentType: "application/json; charset=utf-8",
+		dataType: "json",
+		timeout: 3000
+	}).done(function() {
+		alert('Click - try again, if you dare!');
+		showGames();
+		populateGameListAjax();
+	}).fail(function( jqXHR, textStatus, errorThrown ) {
+		if(textStatus === 'timeout'){     
+			alert('Failed from timeout'); 
+		}
+		if(jqXHR.status == '410'){
+			alert('BANG - fyi you are dead');
+			showGames();
+			populateGameListAjax();
+		}else{
+			alert('Unknown error: '+jqXHR.status); 
+		}
+	});
+}
+
+function reloadGunAjax(){
+  $.ajax({
+	type: "PATCH",
+    url: rouletteApiUrl+"games/"+currentGameId,
+	crossDomain: true,
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+	timeout: 3000
+	}).done(function() {
+		showGames();
+		populateGameListAjax();
+	}).fail(function( jqXHR, textStatus, errorThrown ) {
+		if(textStatus === 'timeout'){     
+			alert('Failed from timeout'); 
+		}else{
+			alert('Unknown error: '+jqXHR.status); 
+		}
+	});
+}
+
+
+function populateGameListAjax(){
+	$('#loading').show();
+	$('#gametable tr').not(':first').remove();
+	$('#gamelist').hide();
+	
+	$.ajax({
+		type: "GET",
+		url: rouletteApiUrl+"games",
+		crossDomain: true,
+		contentType: "application/json; charset=utf-8",
+		dataType: "json",
+		timeout: 3000
+	}).done(function( gamesData ) {
+		showGames();
+		var html = '';
+			for(var i = 0; i < gamesData.length; i++){
+			html += '<tr><td><a href="#" onclick="showGame(\''+gamesData[i].GameId +'\')">' + gamesData[i].GameId + 
+					'</a></td><td>' + gamesData[i].NumberOfTiggerPulls +
+					'</td><td>' + gamesData[i].CylinderSize + '</td></tr>';
+					}
+					
+		$('#gametable tr').first().after(html);
+		$('#gamelist').show();
+		$('#loading').hide();
+	}).fail(function( jqXHR, textStatus, errorThrown ) {
+		if(textStatus === 'timeout'){     
+			alert('Failed from timeout'); 
+		}
+		if(jqXHR.status == '404'){
+			$('#newGamePopup').show();
+			$('#gamelist').hide();
+			$('#loading').hide();
+		}else{
+			alert('Unknown error: '+jqXHR.status); 
+		}
+	});
+}
 
 $( "#showNewGame" ).click(function() {
 	$('#newGamePopup').show();
